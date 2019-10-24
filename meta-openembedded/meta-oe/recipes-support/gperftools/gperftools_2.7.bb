@@ -1,6 +1,6 @@
 SUMMARY = "Fast, multi-threaded malloc() and nifty performance analysis tools"
 HOMEPAGE = "https://github.com/gperftools/gperftools"
-LICENSE = "BSD"
+LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://COPYING;md5=762732742c73dc6c7fbe8632f06c059a"
 DEPENDS += "libunwind"
 
@@ -27,4 +27,12 @@ COMPATIBLE_HOST_mipsarch_libc-glibc = "null"
 # Makefile:4538: recipe for target 'src/base/libtcmalloc_la-linuxthreads.lo' failed
 ARM_INSTRUCTION_SET_armv5 = "arm"
 ARM_INSTRUCTION_SET_toolchain-clang_arm = "arm"
+
+# Ensure static libs are always enabled, as they seem to be not produced by
+# default at least on ARM.
+EXTRA_OECONF_append += " --enable-static"
+
+PACKAGE_BEFORE_PN += "libtcmalloc-minimal"
+FILES_libtcmalloc-minimal = "${libdir}/libtcmalloc_minimal*${SOLIBS} ${libdir}/libtcmalloc_minimal_debug*${SOLIBS}"
+RDEPENDS_${PN} += "libtcmalloc-minimal (= ${EXTENDPKGV})"
 
